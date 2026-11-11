@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb-config
+  namespace: argocd
+  labels: { block: infra }
+  annotations:
+    argocd.argoproj.io/sync-wave: "-9"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/CHANGE_ME/platform-k8s.git
+    targetRevision: main
+    path: manifests/metallb-config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    retry:                      # el webhook de MetalLB puede tardar en estar listo
+      limit: 5
+      backoff: { duration: 15s, factor: 2, maxDuration: 3m }

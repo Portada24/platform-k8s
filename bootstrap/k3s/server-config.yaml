@@ -1,0 +1,15 @@
+# /etc/rancher/k3s/config.yaml del nodo control-plane.
+# - cluster-init: etcd embebido (no SQLite), como pide la prueba.
+# - flannel desactivado: el CNI es Calico (NetworkPolicy completo y compatible con Istio).
+# - traefik y servicelb desactivados: el ingreso lo da Istio (Gateway API) y las IP las da MetalLB.
+cluster-init: true
+flannel-backend: none
+disable-network-policy: true
+disable:
+  - traefik
+  - servicelb
+cluster-cidr: 10.42.0.0/16
+service-cidr: 10.43.0.0/16
+write-kubeconfig-mode: "0644"
+tls-san:
+  - CHANGE_ME_IP_O_HOSTNAME_DEL_CONTROL_PLANE
